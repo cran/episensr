@@ -1,9 +1,10 @@
 Package: episensr
 Type: Package
 Title: Basic Sensitivity Analysis of Epidemiological Results
-Version: 0.7.2
-Imports: triangle, trapezoid, plyr, ggplot2, grid, gridExtra
-Date: 2016-02-02
+Version: 0.8.0
+Imports: triangle, trapezoid, plyr, ggplot2, grid, gridExtra, reshape,
+        boot
+Date: 2017-01-03
 Authors@R: person("Denis", "Haine", email = "denis.haine@gmail.com",
                   role = c("aut", "cre"))
 BugReports: https://github.com/dhaine/episensr/issues
@@ -13,13 +14,14 @@ Description: Basic sensitivity analysis of the observed relative risks adjusting
     examples from the book by Lash T.L, Fox M.P, and Fink A.K.
     "Applying Quantitative Bias Analysis to Epidemiologic Data",
     ('Springer', 2009).
-Depends: R (>= 3.2.3)
+Depends: R (>= 3.3.1)
 License: GPL-2
-Suggests: testthat
+Suggests: testthat, knitr, rmarkdown, aplore3
 RoxygenNote: 5.0.1
+VignetteBuilder: knitr
 NeedsCompilation: no
-Packaged: 2016-02-02 18:40:40 UTC; denis
+Packaged: 2017-01-04 15:53:52 UTC; denis
 Author: Denis Haine [aut, cre]
 Maintainer: Denis Haine <denis.haine@gmail.com>
 Repository: CRAN
-Date/Publication: 2016-02-03 01:14:23
+Date/Publication: 2017-01-04 18:48:20
