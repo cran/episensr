@@ -1,6 +1,6 @@
-7724b34abc45a9b5b7f721084a8e771c *DESCRIPTION
+1af0e1b7cad5ec8c41cf4b0511d35ff4 *DESCRIPTION
 7db0b23057f536d77d7269e5c1feadc3 *NAMESPACE
-f66c7c5849dff558c6b830989335c546 *NEWS.md
+a01498eedd4fc9d5c96633e24a61c733 *NEWS.md
 b502b2b7639797dc5e589535fc27c4b2 *R/boot.bias.R
 6bc243237a8959b7f98ea93632cb6063 *R/confounders.R
 a7a0d6f970d9525700729e1c1886a220 *R/confounders.emm.R
@@ -16,7 +16,7 @@ b9078437708be3e3c9618955b752b19b *R/plot.mbias.R
 987d29ab4d2dda510abc9867e3bbcb44 *R/print.episensr.booted.R
 e29427ff77f9e1e767728c658c11c9d7 *R/print.mbias.R
 23f96e1c308d96f24d17ce592fed9de4 *R/probsens.R
-75cf502280fe2d149aecac80b2dcf3ca *R/probsens.conf.R
+b6868028439551301d67187e67055291 *R/probsens.conf.R
 558328473a56972424edf7e5449d4f4c *R/probsens.irr.R
 45cc3f584ad10dd5f28966d1dd500923 *R/probsens.irr.conf.R
 cd0db307810ee382dedda28da18a8c66 *R/probsens.sel.R
@@ -54,6 +54,6 @@ c44d7a4f131a80dea8336ada05787bdc *tests/testthat/test-confounders.R
 77cffe79644723980de15ff3ae52f946 *tests/testthat/test-confounders.poly.R
 3938adda6457fd421dbae7d8ab879aaf *tests/testthat/test-misclass.R
 34118b65737406edb77730aa45d9d5f8 *tests/testthat/test-multidim.R
-4e34fafe47d6092386cf6a10378ed08d *tests/testthat/test-probsens.R
+83766660cdcf48b1c9b53f3a76879b4e *tests/testthat/test-probsens.R
 c536a67310684a1f5186b6173f75eec0 *tests/testthat/test-selection.R
 0dcba047714c339a10a7dca8efb854ee *vignettes/episensr.Rmd
