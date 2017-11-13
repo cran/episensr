@@ -20,7 +20,7 @@ smoke.nd <- probsens(matrix(c(215, 1449, 668, 4296),
                             dimnames = list(c("BC+", "BC-"), c("Smoke+", "Smoke-")),
                             nrow = 2, byrow = TRUE),
                      type = "exposure",
-                     reps = 10000,
+                     reps = 50000,
                      seca.parms = list("uniform", c(.7, .95)),
                      spca.parms = list("uniform", c(.9, .99)))
 smoke.nd
@@ -34,6 +34,16 @@ hist(smoke.nd$sim.df[!is.na(smoke.nd$sim.df$corr.RR), ]$seca,
      col = "lightgreen",
      main = NULL,
      xlab = "Sensitivity for Cases")
+
+## ----probsens-conf-------------------------------------------------------
+set.seed(123)
+probsens.conf(matrix(c(45, 94, 257, 945),
+                     dimnames = list(c("Cases+", "Cases-"), c("Res+", "Res-")),
+                     nrow = 2, byrow = TRUE),
+              reps = 50000,
+              prev.exp = list("uniform", c(.4, .7)),
+              prev.nexp = list("uniform", c(.4, .7)),
+              risk = list("log-normal", c(2.159, .28)))
 
 ## ---- boot---------------------------------------------------------------
 library(aplore3)  # to get ICU data
