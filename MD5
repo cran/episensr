@@ -1,6 +1,6 @@
-ed7991b309bc371bfb9448929298ead9 *DESCRIPTION
+262b063cfd9a7e85a0c111c73d46dd51 *DESCRIPTION
 f94c2bd6d726e9d2420aa6cd6e845372 *NAMESPACE
-8f31064e7a304e3551bfc4215014fa6e *NEWS.md
+a6de48a8c752a27b1a978ef13c3b56a8 *NEWS.md
 b502b2b7639797dc5e589535fc27c4b2 *R/boot.bias.R
 a8dcffafc50e2624d2a43745d7f9eb7a *R/confounders.R
 69fd17a89fddd8a6ab5b747641addb73 *R/confounders.array.R
@@ -25,12 +25,12 @@ ce9b393c63c80c9a221541117529f2e6 *R/probsens.R
 d86bacf353a43537b66133678485189c *R/probsens.irr.R
 eadc15c3017da7f8fed6877919773725 *R/probsens.irr.conf.R
 816c58e2d8b472c544c6acab15a89794 *R/probsens.sel.R
-17650dfc36506b97932958b96ad30f93 *R/selection.R
+dea261b521c95dba0ea92efeb63cc362 *R/selection.R
 bdc9bd563d4e79d7ed994613167d715a *README.md
-5a19824bb810f665e8fde18726ebce0f *build/vignette.rds
+8833bdfa8c1b383335477de42c1df334 *build/vignette.rds
 b14158a254528e47844d16ed22b60933 *inst/doc/episensr.R
 c30e3f9bd48b5a64b8a0b072745b377d *inst/doc/episensr.Rmd
-9bcbb86182e830c9cd91ea43cdf03c95 *inst/doc/episensr.html
+50792ff463b8503619c50c658c47b39f *inst/doc/episensr.html
 53da801851553b0d951ab6803619f682 *man/boot.bias.Rd
 a2187c13407a80aecf03540f352b7624 *man/confounders.Rd
 4635a3f90136b10452430a3b0da92c9b *man/confounders.array.Rd
@@ -67,5 +67,5 @@ c44d7a4f131a80dea8336ada05787bdc *tests/testthat/test-confounders.R
 3938adda6457fd421dbae7d8ab879aaf *tests/testthat/test-misclass.R
 34118b65737406edb77730aa45d9d5f8 *tests/testthat/test-multidim.R
 c367e7088b0bf33058b00b918dae2c3b *tests/testthat/test-probsens.R
-c536a67310684a1f5186b6173f75eec0 *tests/testthat/test-selection.R
+57c81553fa073834cf2f5975b070af18 *tests/testthat/test-selection.R
 c30e3f9bd48b5a64b8a0b072745b377d *vignettes/episensr.Rmd
