@@ -1,19 +1,18 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 
 <meta name="author" content="Denis Haine" />
 
-<meta name="date" content="2019-09-02" />
+<meta name="date" content="2020-02-02" />
 
 <title>Quantitative Bias Analysis for Epidemiologic Data</title>
 
@@ -120,9 +119,6 @@ padding-right: 2em;
 font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 font-size: 14px;
 line-height: 1.35;
-}
-#header {
-text-align: center;
 }
 #TOC {
 clear: both;
@@ -291,7 +287,8 @@ code > span.st { color: #d14; }
 code > span.co { color: #888888; font-style: italic; } 
 code > span.ot { color: #007020; } 
 code > span.al { color: #ff0000; font-weight: bold; } 
-code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
 </style>
 
 
@@ -306,7 +303,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 
 <h1 class="title toc-ignore">Quantitative Bias Analysis for Epidemiologic Data</h1>
 <h4 class="author">Denis Haine</h4>
-<h4 class="date">2019-09-02</h4>
+<h4 class="date">2020-02-02</h4>
 
 
 
@@ -575,12 +572,9 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 ## Observed Relative Risk: 2.071429 1.175157 3.651272
 ##    Observed Odds Ratio: 2.500000 1.230418 5.079573
 ## ---
-##                                                                2.5%
-## Misclassification Bias Corrected Relative Risk:  3.627845          
-##    Misclassification Bias Corrected Odds Ratio:  4.871795  1.235506
-##                                                     97.5%
-## Misclassification Bias Corrected Relative Risk:          
-##    Misclassification Bias Corrected Odds Ratio: 19.210258</code></pre>
+##                                                                2.5%     97.5%
+## Misclassification Bias Corrected Relative Risk:  3.627845                    
+##    Misclassification Bias Corrected Odds Ratio:  4.871795  1.235506 19.210258</code></pre>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1">## Then bootstrap it</a>
 <a class="sourceLine" id="cb18-2" data-line-number="2"><span class="kw">set.seed</span>(<span class="dv">123</span>)</a>
 <a class="sourceLine" id="cb18-3" data-line-number="3">misclass_boot &lt;-<span class="st"> </span><span class="kw">boot.bias</span>(misclass_eval, <span class="dt">R =</span> <span class="dv">10000</span>)</a>

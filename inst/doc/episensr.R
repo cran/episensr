@@ -1,4 +1,4 @@
-## ----selection-----------------------------------------------------------
+## ----selection----------------------------------------------------------------
 library(episensr)
 
 stang <- selection(matrix(c(136, 107, 297, 165),
@@ -7,21 +7,21 @@ stang <- selection(matrix(c(136, 107, 297, 165),
                    bias_parms = c(.94, .85, .64, .25))
 stang
 
-## ----confounders---------------------------------------------------------
+## ----confounders--------------------------------------------------------------
 confounders(matrix(c(105, 85, 527, 93),
                    dimnames = list(c("HIV+", "HIV-"), c("Circ+", "Circ-")),
                    nrow = 2, byrow = TRUE),
             type = "RR",
             bias_parms = c(.63, .8, .05))
 
-## ----e-value-1-----------------------------------------------------------
+## ----e-value-1----------------------------------------------------------------
 confounders.evalue(est = 3.9, lower_ci = 1.8, upper_ci = 8.7, type = "RR")
 
-## ----e-value-2-----------------------------------------------------------
+## ----e-value-2----------------------------------------------------------------
 confounders.evalue(est = 1.06, lower_ci = 0.93, upper_ci = 1.22,
                    type = "RR", true_est = 1.2)
 
-## ----probsens------------------------------------------------------------
+## ----probsens-----------------------------------------------------------------
 set.seed(123)
 smoke.nd <- probsens(matrix(c(215, 1449, 668, 4296),
                             dimnames = list(c("BC+", "BC-"), c("Smoke+", "Smoke-")),
@@ -32,17 +32,17 @@ smoke.nd <- probsens(matrix(c(215, 1449, 668, 4296),
                      spca.parms = list("uniform", c(.9, .99)))
 smoke.nd
 
-## ----str-----------------------------------------------------------------
+## ----str----------------------------------------------------------------------
 str(smoke.nd)
 
-## ----plot, fig.cap = "Sensibility prior distribution."-------------------
+## ----plot, fig.cap = "Sensibility prior distribution."------------------------
 hist(smoke.nd$sim.df[!is.na(smoke.nd$sim.df$corr.RR), ]$seca,
      breaks = seq(0.65, 1, 0.01),
      col = "lightgreen",
      main = NULL,
      xlab = "Sensitivity for Cases")
 
-## ----probsens-conf-------------------------------------------------------
+## ----probsens-conf------------------------------------------------------------
 set.seed(123)
 probsens.conf(matrix(c(45, 94, 257, 945),
                      dimnames = list(c("Cases+", "Cases-"), c("Res+", "Res-")),
@@ -52,7 +52,7 @@ probsens.conf(matrix(c(45, 94, 257, 945),
               prev.nexp = list("uniform", c(.4, .7)),
               risk = list("log-normal", c(2.159, .28)))
 
-## ---- boot---------------------------------------------------------------
+## ---- boot--------------------------------------------------------------------
 library(aplore3)  # to get ICU data
 data(icu)
 
@@ -70,24 +70,24 @@ misclass_boot
 ## ---- boot_fig, fig.cap = "Bootstrap replicates and confidence interval.", warning=F----
 plot(misclass_boot, "rr")
 
-## ----chien---------------------------------------------------------------
+## ----chien--------------------------------------------------------------------
 chien <- matrix(c(118, 832, 103, 884),
                 dimnames = list(c("BC+", "BC-"), c("AD+", "AD-")),
                 nrow = 2, byrow = TRUE)
 
-## ----chien-tab, echo=FALSE-----------------------------------------------
+## ----chien-tab, echo=FALSE----------------------------------------------------
 knitr::kable(chien)
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 chien %>%
     misclassification(., type = "exposure", bias_parms = c(.56, .58, .99, .97))
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 chien %>% 
     misclassification(., type = "exposure", bias_parms = c(.56, .58, .99, .97)) %>%
     multiple.bias(., bias_function = "selection", bias_parms = c(.73, .61, .82, .76))
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 chien %>%
     misclassification(., type = "exposure", bias_parms = c(.56, .58, .99, .97)) %>%
     multiple.bias(., bias_function = "selection",
@@ -95,7 +95,7 @@ chien %>%
     multiple.bias(., bias_function = "confounders",
                   type = "OR", bias_parms = c(.92, .3, .44))
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 mod1 <- chien %>%
     probsens(., type = "exposure", reps = 100000,
              seca.parms = list("trapezoidal", c(.45, .5, .6, .65)),
@@ -105,7 +105,7 @@ mod1 <- chien %>%
              corr.se = .8, corr.sp = .8)
 mod1
 
-## ----plot2, message=FALSE------------------------------------------------
+## ----plot2, message=FALSE-----------------------------------------------------
 library(ggplot2)
 ggplot(mod1$sim.df, aes(x = corr.OR)) + 
     geom_histogram(aes(y = ..density..), colour = "black", fill = "white") +
@@ -113,7 +113,7 @@ ggplot(mod1$sim.df, aes(x = corr.OR)) +
     labs(title = "1. Misclassification bias", x = "OR without random error incorporated") +
     coord_cartesian(xlim = c(0, 3))
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 mod2 <- chien %>%
     probsens.sel(., reps = 100000,
                  case.exp = list("logit-normal", c(-1.1, 0, 0, 1)),
@@ -122,14 +122,14 @@ mod2 <- chien %>%
                  ncase.nexp = list("trapezoidal", c(0.7, 0.8, 0.9, 1)))
 mod2
 
-## ----plot3, message=FALSE------------------------------------------------
+## ----plot3, message=FALSE-----------------------------------------------------
 ggplot(mod2$sim.df, aes(x = corr.or)) + 
     geom_histogram(aes(y = ..density..), colour = "black", fill = "white") +
     geom_density(alpha = .2, fill = "#FF6666") +
     labs(title = "2. Selection bias", x = "OR without random error incorporated") +
     coord_cartesian(xlim = c(0, 3))
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 mod3 <- chien %>%
     probsens.conf(., reps = 100000,
                   prev.exp = list("logit-normal", c(-0.75, 0.8, 0, 1)),
@@ -137,14 +137,14 @@ mod3 <- chien %>%
                   risk = list("trapezoidal", c(.2, .58, 1.01, 1.24)))
 mod3
 
-## ----plot4, message=FALSE, warning=FALSE---------------------------------
+## ----plot4, message=FALSE, warning=FALSE--------------------------------------
 ggplot(mod3$sim.df, aes(x = OR.SMR.or)) + 
     geom_histogram(aes(y = ..density..), colour = "black", fill = "white") +
     geom_density(alpha = .2, fill = "#FF6666") +
     labs(title = "3. Confounding bias", x = "OR without random error incorporated") +
     coord_cartesian(xlim = c(0, 3))
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 chien %>%
     probsens(., type = "exposure", reps = 100000,
              seca.parms = list("trapezoidal", c(.45, .5, .6, .65)),
@@ -158,7 +158,7 @@ chien %>%
                   ncase.exp = list("logit-normal", c(-1.2, 0, 0, 1)),
                   ncase.nexp = list("trapezoidal", c(0.7, 0.8, 0.9, 1)))
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 mod6 <- chien %>%
     probsens(., type = "exposure", reps = 100000,
              seca.parms = list("trapezoidal", c(.45, .5, .6, .65)),
@@ -177,7 +177,7 @@ mod6 <- chien %>%
                   risk = list("trapezoidal", c(.2, .58, 1.01, 1.24)))
 mod6
 
-## ----plot5, message=FALSE, warning=FALSE---------------------------------
+## ----plot5, message=FALSE, warning=FALSE--------------------------------------
 ggplot(mod6$sim.df, aes(x = OR.SMR.or)) + 
     geom_histogram(aes(y = ..density..), colour = "black", fill = "white") +
     geom_density(alpha = .2, fill = "#FF6666") +
