@@ -1,9 +1,9 @@
 Package: episensr
 Type: Package
 Title: Basic Sensitivity Analysis of Epidemiological Results
-Version: 1.0.0
+Version: 1.1.0
 Imports: triangle, trapezoid, actuar, dagitty, ggdag, boot, magrittr
-Date: 2021-02-20
+Date: 2021-08-19
 Authors@R: 
     person(given = "Denis",
            family = "Haine",
@@ -24,9 +24,10 @@ Suggests: testthat, knitr, rmarkdown, aplore3, directlabels, tidyverse,
 RoxygenNote: 7.1.1
 Encoding: UTF-8
 VignetteBuilder: knitr
+URL: https://github.com/dhaine/episensr
 NeedsCompilation: no
-Packaged: 2021-02-23 15:28:52 UTC; denis
+Packaged: 2021-08-19 17:50:54 UTC; denis
 Author: Denis Haine [aut, cre] (<https://orcid.org/0000-0002-6691-7335>)
 Maintainer: Denis Haine <denis.haine@gmail.com>
 Repository: CRAN
-Date/Publication: 2021-02-23 16:10:02 UTC
+Date/Publication: 2021-08-20 06:50:02 UTC
