@@ -11,8 +11,7 @@ dat$RR_adj <- apply(dat, 1,
                                                   type = "binary",
                                                   bias_parms = c(x[1],
                                                                  x[2],
-                                                                 0.5),
-                                                  print = FALSE)[5])
+                                                                 0.5))[[3]][1])
 
 ## ----array_3d,warning=FALSE,message=FALSE,fig.width=8,fig.height=8------------
 library(lattice)
@@ -45,23 +44,19 @@ confounders.ext(RR = 1, bias_parms = c(0.1, 1.6, 0.1, 0.51))
 dat <- expand.grid(RR_CD = seq(0.1, 1, 0.1))
 dat$nsaid <- apply(dat, 1,
                    function(x) confounders.ext(1,
-                                               bias_parms = c(x[1], 0.9, 0.1, 0.4),
-                                               print = FALSE)[7])
+                                               bias_parms = c(x[1], 0.9, 0.1, 0.4))[[3]][2])
 dat$non_user <- apply(dat, 1,
                       function(x) confounders.ext(1,
                                                   bias_parms = c(x[1], 1.03, 0.09,
-                                                                 0.12),
-                                                  print = FALSE)[7])
+                                                                 0.12))[[3]][2])
 dat$naproxen <- apply(dat, 1,
                       function(x) confounders.ext(1,
                                                   bias_parms = c(x[1], 1.15, 0.09,
-                                                                 0.79),
-                                               print = FALSE)[7])
+                                                                 0.79))[[3]][2])
 dat$rof_napro <- apply(dat, 1,
                        function(x) confounders.ext(1,
-                                               bias_parms = c(x[1], 1.6, 0.1, 0.51),
-                                               print = FALSE)[7])
-library(tidyverse)
+                                               bias_parms = c(x[1], 1.6, 0.1, 0.51))[[3]][2])
+library(tidyr)
 dat2 <- dat %>% gather(nsaid, non_user, naproxen, rof_napro,
                        key = "COX2", value = "bias_perc")
 

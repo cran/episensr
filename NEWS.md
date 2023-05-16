@@ -1,3 +1,10 @@
+# episensr 1.2.0
+- Fix CI for OR in `plot.booted` (@codiewood, #2)
+- Replaced dot-dot notation by after_stat(density) in `plot.probsens` and `plot.booted`
+- `misclassification_cov` replaced by `misclassification.cov`
+- Standard output for `confounders.ext`, `confounders.limit`, and `confounders.array`
+- Suggest `tidyr` instead of `tidyverse`
+
 # episensr 1.1.0
 - Fix confidence interval values in plotting output of `probsens`.
 - Fix bug that created integer overflow in rare cases when 2-by-2 table cells

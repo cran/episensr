@@ -12,7 +12,7 @@ chien %>%
     misclassification(., type = "exposure", bias_parms = c(.56, .58, .99, .97))
 
 ## ----misclass_sel-------------------------------------------------------------
-chien %>% 
+chien %>%
     misclassification(., type = "exposure", bias_parms = c(.56, .58, .99, .97)) %>%
     multiple.bias(., bias_function = "selection", bias_parms = c(.73, .61, .82, .76))
 
@@ -91,7 +91,7 @@ mod6 <- chien %>%
                   case.exp = list("beta", c(8.08, 24.25)),
                   case.nexp = list("trapezoidal", c(.75, .85, .95, 1)),
                   ncase.exp = list("beta", c(12.6, 50.4)),
-                  ncase.nexp = list("trapezoidal", c(0.7, 0.8, 0.9, 1))) %>% 
+                  ncase.nexp = list("trapezoidal", c(0.7, 0.8, 0.9, 1))) %>%
     multiple.bias(., bias_function = "probsens.conf",
                   prev.exp = list("beta", c(24.9, 58.1)),
                   prev.nexp = list("beta", c(42.9, 54.6)),
