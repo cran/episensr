@@ -67,6 +67,13 @@ direct.label(p3, list("far.from.others.borders", "calc.boxes", "enlarge.box",
                            hjust = 1, vjust = -.5, box.color = NA, cex = .6,
                            fill = "transparent", "draw.rects"))
 
+## ---- misclass_pv-------------------------------------------------------------
+misclassification(matrix(c(599, 4978, 31175, 391851),
+                         dimnames = list(c("Preterm", "Term"), c("Underweight", "Normal weight")),
+                         nrow = 2, byrow = TRUE),
+                  type = "exposure_pv",
+                  bias_parms = c(0.65, 0.74, 1, 0.98))
+
 ## ----cov_misclass-------------------------------------------------------------
 misclassification.cov(array(c(1319, 38054, 5641, 405546, 565, 3583,
                               781, 21958, 754, 34471, 4860, 383588),
