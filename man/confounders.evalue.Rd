@@ -28,8 +28,8 @@ risk, odds ratio, hazard ratio, incidence rate ratio, risk difference).}
 divided by its standard deviation.}
 
 \item{type}{Choice of effect measure (relative risk, and odds ratio or hazard ratio
-for rare outcomes i.e. < 15% at end of follow-up -- RR; odds ratio for common
-outcome -- ORc; hazard ratio for common outcome i.e. > 15% at end of follow-up -- HRc;
+for rare outcomes i.e. < 15\% at end of follow-up -- RR; odds ratio for common
+outcome -- ORc; hazard ratio for common outcome i.e. > 15\% at end of follow-up -- HRc;
 difference in continuous outcomes, RR approximation -- diff_RR; difference in
 continuous outcomes, OR approximation -- diff_OR).}
 
@@ -58,7 +58,7 @@ association.
 confounders.evalue(est = 3.9, type = "RR")
 
 # The data for this example come from:
-# Oddy W.H, Smith G.J., Jacony P. 
+# Oddy W.H, Smith G.J., Jacony P.
 # A possible strategy for developing a model to account for attrition bias in a
 # longitudinal cohort to investigate associations between exclusive breastfeeding and
 # overweight and obesity at 20 years.
@@ -75,3 +75,12 @@ confounders.evalue(est = -0.42, sd = 0.14, type = "diff_RR")
 VanderWeele T.J and Ding P. Sensitivity analysis in observational research:
 Introducing the E-value. Annals of Internal Medicine 2017;167:268-274.
 }
+\seealso{
+Other confounding: 
+\code{\link{confounders}()},
+\code{\link{confounders.array}()},
+\code{\link{confounders.ext}()},
+\code{\link{confounders.limit}()},
+\code{\link{probsens.irr.conf}()}
+}
+\concept{confounding}

@@ -14,10 +14,12 @@
 \item{...}{Other unused arguments.}
 }
 \description{
-This takes an episensr bootstrap object and produces the plot of bootstrap replicates for selection or misclassification bias of the variable of interest, either relative risk or odds ratio. It also draws the confidence interval.
+This takes an episensr bootstrap object and produces the plot of bootstrap
+replicates for selection or misclassification bias of the variable of interest,
+either relative risk or odds ratio. It also draws the confidence interval.
 }
 \examples{
-misclass_eval <- misclassification(matrix(c(215, 1449, 668, 4296),
+misclass_eval <- misclass(matrix(c(215, 1449, 668, 4296),
 dimnames = list(c("Breast cancer+", "Breast cancer-"),
 c("Smoker+", "Smoker-")),
 nrow = 2, byrow = TRUE),
@@ -30,5 +32,10 @@ plot(misclass_boot, association = "rr")
 
 }
 \seealso{
-\code{\link{boot.bias}, \link{boot}, \link{selection}, \link{misclassification}}
+\code{\link{boot.bias}, \link{selection}, \link{misclass}}
+
+Other visualization: 
+\code{\link{plot.episensr.probsens}()},
+\code{\link{plot.mbias}()}
 }
+\concept{visualization}

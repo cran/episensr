@@ -8,43 +8,51 @@ probsens.irr.conf(
   counts,
   pt = NULL,
   reps = 1000,
-  prev.exp = list(dist = c("constant", "uniform", "triangular", "trapezoidal",
-    "logit-logistic", "logit-normal", "beta"), parms = NULL),
-  prev.nexp = list(dist = c("constant", "uniform", "triangular", "trapezoidal",
-    "logit-logistic", "logit-normal", "beta"), parms = NULL),
+  prev_exp = list(dist = c("constant", "uniform", "triangular", "trapezoidal", "normal",
+    "beta"), parms = NULL),
+  prev_nexp = list(dist = c("constant", "uniform", "triangular", "trapezoidal", "normal",
+    "beta"), parms = NULL),
   risk = list(dist = c("constant", "uniform", "triangular", "trapezoidal",
     "log-logistic", "log-normal"), parms = NULL),
-  corr.p = NULL,
-  discard = TRUE,
+  corr_p = NULL,
   alpha = 0.05
 )
 }
 \arguments{
-\item{counts}{A table or matrix where first row contains disease counts and second row contains person-time at risk, and first and second columns are exposed and unexposed observations, as:
+\item{counts}{A table or matrix where first row contains disease counts and
+second row contains person-time at risk, and first and second columns are
+exposed and unexposed observations, as:
 \tabular{lll}{
 \tab Exposed \tab Unexposed \cr
 Cases \tab a \tab b \cr
 Person-time \tab N1 \tab N0
 }}
 
-\item{pt}{A numeric vector of person-time at risk. If provided, \code{counts} must be a numeric vector of disease counts.}
+\item{pt}{A numeric vector of person-time at risk. If provided, \code{counts}
+must be a numeric vector of disease counts.}
 
 \item{reps}{Number of replications to run.}
 
-\item{prev.exp}{List defining the prevalence of exposure among the exposed. The first argument provides the probability distribution function (constant,uniform, triangular, trapezoidal, logit-logistic, logit-normal, or beta) and the second its parameters as a vector. Logit-logistic and logit-normal distributions can be shifted by providing lower and upper bounds. Avoid providing these values if a non-shifted distribution is desired.
+\item{prev_exp}{List defining the prevalence of exposure among the exposed.
+The first argument provides the probability distribution function (constant,
+uniform, triangular, trapezoidal, truncated normal, or beta) and the second
+its parameters as a vector. Lower and upper bounds for truncated normal distribution
+cannot be les than zero.
 \enumerate{
 \item constant; value,
 \item uniform: min, max,
 \item triangular: lower limit, upper limit, mode,
 \item trapezoidal: min, lower mode, upper mode, max.
-\item logit-logistic: location, scale, lower bound shift, upper bound shift,
-\item logit-normal: location, scale, lower bound shift, upper bound shift,
+\item normal: lower bound, upper bound, mean, sd,
 \item beta: alpha, beta.
 }}
 
-\item{prev.nexp}{List defining the prevalence of exposure among the unexposed.}
+\item{prev_nexp}{List defining the prevalence of exposure among the unexposed.}
 
-\item{risk}{List defining the confounder-disease relative risk or the confounder-exposure odds ratio. The first argument provides the probability distribution function (constant,uniform, triangular, trapezoidal, log-logistic, or log-normal) and the second its parameters as a vector:
+\item{risk}{List defining the confounder-disease relative risk or the
+confounder-exposure odds ratio. The first argument provides the probability
+distribution function (constant,uniform, triangular, trapezoidal, log-logistic,
+or log-normal) and the second its parameters as a vector:
 \enumerate{
 \item constant: value,
 \item uniform: min, max,
@@ -54,34 +62,63 @@ Person-time \tab N1 \tab N0
 \item log-normal: meanlog, sdlog. This is the mean and standard deviation on the log scale.
 }}
 
-\item{corr.p}{Correlation between the exposure-specific confounder prevalences.}
-
-\item{discard}{A logical scalar. In case of negative adjusted count, should the draws be discarded? If set to FALSE, negative counts are set to zero.}
+\item{corr_p}{Correlation between the exposure-specific confounder prevalences.}
 
 \item{alpha}{Significance level.}
 }
 \value{
 A list with elements:
-\item{obs.data}{The analyzed 2 x 2 table from the observed data.}
-\item{obs.measures}{A table of observed incidence rate ratio with exact confidence interval.}
-\item{adj.measures}{A table of corrected incidence rate ratios.}
-\item{sim.df}{Data frame of random parameters and computed values.}
+\item{obs_data}{The analyzed 2 x 2 table from the observed data.}
+\item{obs_measures}{A table of observed incidence rate ratio with exact confidence interval.}
+\item{adj_measures}{A table of corrected incidence rate ratios.}
+\item{sim_df}{Data frame of random parameters and computed values.}
 }
 \description{
-Probabilistic sensitivity analysis to correct for unmeasured confounding when person-time data has been collected.
+Probabilistic sensitivity analysis to correct for unmeasured confounding when
+person-time data has been collected.
 }
+\details{
+Correlations between prevalences of exposure classification among cases and
+controls can be specified and use the NORmal To Anything (NORTA)
+transformation (Li & Hammond, 1975).
+}
+\section{Updated calculations}{
+
+episensr 2.0.0 introduced updated calculations of probabilistic bias analyses
+by (1) using the NORTA transformation to define a correlation between
+distributions, and (2) sampling true prevalences and then sampling the
+adjusted cell counts rather than just using the expected cell counts from a
+simple quantitative bias analysis. This updated version should be preferred
+but if you need to run an old analysis, you can easily revert to the
+computation using \code{\link[=probsens.irr.conf_legacy]{probsens.irr.conf_legacy()}} as follows:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{library(episensr)
+probsens.irr.conf <- probsens.irr.conf_legacy
+}\if{html}{\out{</div>}}
+}
+
 \examples{
 set.seed(123)
 # Unmeasured confounding
 probsens.irr.conf(matrix(c(77, 10000, 87, 10000),
 dimnames = list(c("D+", "Person-time"), c("E+", "E-")), ncol = 2),
 reps = 20000,
-prev.exp = list("trapezoidal", c(.01, .2, .3, .51)),
-prev.nexp = list("trapezoidal", c(.09, .27, .35, .59)),
+prev_exp = list("trapezoidal", c(.01, .2, .3, .51)),
+prev_nexp = list("trapezoidal", c(.09, .27, .35, .59)),
 risk = list("trapezoidal", c(2, 2.5, 3.5, 4.5)),
-corr.p = .8)
+corr_p = .8)
 }
 \references{
-Lash, T.L., Fox, M.P, Fink, A.K., 2009 \emph{Applying Quantitative
-Bias Analysis to Epidemiologic Data}, pp.117--150, Springer.
+Li, S.T., Hammond, J.L., 1975. \emph{Generation of Pseudorandom Numbers
+with Specified Univariate Distributions and Correlation Coefficients}.
+IEEE Trans Syst Man Cybern 5:557-561.
 }
+\seealso{
+Other confounding: 
+\code{\link{confounders}()},
+\code{\link{confounders.array}()},
+\code{\link{confounders.evalue}()},
+\code{\link{confounders.ext}()},
+\code{\link{confounders.limit}()}
+}
+\concept{confounding}

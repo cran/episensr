@@ -1,15 +1,14 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# episensr <img src="man/figures/logo.png" align="right" width=120 />
+# episensr <img src="man/figures/logo.png" align="right" width="240" style="float:right; with:240px;"/>
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/dhaine/episensr/actions/workflows/check-standard.yaml/badge.svg)](https://github.com/dhaine/episensr/actions/workflows/check-standard.yaml)
-[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/episensr)](https://cran.r-project.org/package=episensr)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8299430.svg)](https://doi.org/10.5281/zenodo.8299430)
-[![Codecov test
-coverage](https://codecov.io/gh/dhaine/episensr/branch/master/graph/badge.svg)](https://app.codecov.io/gh/dhaine/episensr/tree/master)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/episensr)](https://cran.r-project.org/package=episensr)
+[![R CMD
+check](https://ci.codeberg.org/api/badges/14547/status.svg)](https://ci.codeberg.org/repos/14547)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5223863.svg)](https://doi.org/10.5281/zenodo.5223863)
 [![Project Status: Active – The project has reached a stable, usable
 state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
@@ -20,8 +19,9 @@ downloads](https://cranlogs.r-pkg.org/badges/grand-total/episensr)](https://cran
 
 The R package **episensr** allows to do basic sensitivity analysis of
 epidemiological results as described in **Applying Quantitative Bias
-Analysis to Epidemiological Data** by Timothy L. Lash, Matthew P. Fox,
-and Aliza K. Fink (ISBN: 978-0-387-87960-4,
+Analysis to Epidemiological Data, 2<sup>nd</sup> ed.** by Matthew P.
+Fox, Richard F. MacLehose, and Timothy L. Lash ([ISBN:
+978-3-030-82672-7](https://link.springer.com/book/10.1007/978-3-030-82673-4),
 [bias.analysis](https://sites.google.com/site/biasanalysis/)).
 
 ## License
@@ -36,19 +36,19 @@ To cite **episensr**, please use:
 citation("episensr")
 #> To cite package 'episensr' in publications use:
 #> 
-#>   Haine, Denis (2023). The episensr package: basic sensitivity analysis
-#>   of epidemiological results. R package version 1.3.0.
-#>   https://dhaine.github.io/episensr/. doi: 10.5281/zenodo.8299430.
+#>   Haine, Denis (2025). The episensr package: Basic sensitivity analysis
+#>   of epidemiological results. R package version 2.0.0.
+#>   https://dhaine.codeberg.page/episensr/. doi: 10.5281/zenodo.4554553.
 #> 
 #> A BibTeX entry for LaTeX users is
 #> 
 #>   @Misc{,
 #>     title = {The episensr package: basic sensitivity analysis of epidemiological results},
 #>     author = {Denis Haine},
-#>     year = {2023},
-#>     note = {R package version 1.3.0},
-#>     doi = {10.5281/zenodo.8299430},
-#>     url = {https://dhaine.github.io/episensr/},
+#>     year = {2025},
+#>     note = {R package version 2.0.0},
+#>     doi = {10.5281/zenodo.4554553},
+#>     url = {https://dhaine.codeberg.page/episensr/},
 #>   }
 ```
 
@@ -65,7 +65,7 @@ impact on the association estimate. The 2X2 table for this study is the
 following:
 
 |          | regular use | no use |
-| -------- | ----------- | ------ |
+|----------|-------------|--------|
 | cases    | 136         | 107    |
 | controls | 297         | 165    |
 
@@ -75,25 +75,25 @@ We use the function `selection` as shown below.
 library(episensr)
 #> Loading required package: ggplot2
 #> Thank you for using episensr!
-#> This is version 1.3.0 of episensr
+#> This is version 2.0.0 of episensr
 #> Type 'citation("episensr")' for citing this R package in publications.
 
 selection(matrix(c(136, 107, 297, 165),
                  dimnames = list(c("UM+", "UM-"), c("Mobile+", "Mobile-")),
                  nrow = 2, byrow = TRUE),
           bias_parms = c(.94, .85, .64, .25))
-#> --Observed data-- 
-#>          Outcome: UM+ 
-#>        Comparing: Mobile+ vs. Mobile- 
+#> 
+#> ── Observed data ───────────────────────────────────────────────────────────────
+#> • Outcome: UM+
+#> • Comparing: Mobile+ vs. Mobile-
 #> 
 #>     Mobile+ Mobile-
 #> UM+     136     107
 #> UM-     297     165
-#> 
 #>                                        2.5%     97.5%
 #> Observed Relative Risk: 0.7984287 0.6518303 0.9779975
 #>    Observed Odds Ratio: 0.7061267 0.5143958 0.9693215
-#> ---
+#> ── Bias-adjusted measures ──
 #>                                                 
 #> Selection Bias Corrected Relative Risk: 1.483780
 #>    Selection Bias Corrected Odds Ratio: 1.634608
@@ -115,10 +115,10 @@ You can get the latest release from **CRAN**:
 install.packages('episensr')
 ```
 
-Or install the development version from **GitHub** with **devtools**
-package:
+Or install the development version from
+[Codeberg](https://codeberg.org/) with **remotes** package:
 
 ``` r
 #install.packages("remotes")
-remotes::install_github('dhaine/episensr', ref = "develop")
+remotes::install_git("https://codeberg.org/dhaine/episensr", ref = "develop")
 ```

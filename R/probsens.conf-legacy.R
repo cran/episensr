@@ -1,6 +1,22 @@
-#' Probabilistic sensitivity analysis for unmeasured confounding.
+#' Legacy version of `probsens.conf()`.
 #'
-#' Probabilistic sensitivity analysis to correct for unknown or unmeasured confounding and random error simultaneously.
+#' @description
+#' `r lifecycle::badge("superseded")`
+#'
+#' episensr 2.0.0 introduced breaking changes in probabilistic bias analyses by
+#' (1) using the NORTA transformation to define a correlation between
+#' distributions, and (2) sampling true prevalences and then sampling the
+#' adjusted cell counts rather than just using the expected cell counts from a
+#' simple quantitative bias analysis. This updated version should be preferred
+#' and this legacy version will be deprecated in future versions. However, if
+#' you need to quickly roll back to the previous calculations, this function
+#' provides the previous interface. To make old code work as is, add the
+#' following code to the top of your script:
+#'
+#' ```
+#' library(episensr)
+#' probsens.conf <- probsens.conf_legacy
+#' ```
 #'
 #' @param case Outcome variable. If a variable, this variable is tabulated against.
 #' @param exposed Exposure variable.
@@ -44,6 +60,7 @@
 #' # Increased risk of infection with human immunodeficiency virus type 1 among
 #' # uncircumcised men presenting with genital ulcer disease in Kenya.
 #' # Clin Infect Dis 1996;23:449-53.
+#' \dontrun{
 #' set.seed(123)
 #' probsens.conf(matrix(c(105, 85, 527, 93),
 #' dimnames = list(c("HIV+", "HIV-"), c("Circ+", "Circ-")), nrow = 2, byrow = TRUE),
@@ -61,26 +78,28 @@
 #' prev.nexp = list("beta", c(10, 16)),
 #' risk = list("triangular", c(.6, .7, .63)),
 #' corr.p = .8)
+#' }
 #' @export
 #' @importFrom stats median qnorm quantile runif rlnorm rbeta qbeta
-probsens.conf <- function(case,
-                          exposed,
-                          reps = 1000,
-                          prev.exp = list(dist = c("constant", "uniform",
-                                              "triangular", "trapezoidal",
-                                              "logit-logistic", "logit-normal", "beta"),
-                              parms = NULL),
-                          prev.nexp = list(dist = c("constant", "uniform",
-                                               "triangular", "trapezoidal",
-                                               "logit-logistic", "logit-normal", "beta"),
-                              parms = NULL),
-                          risk = list(dist = c("constant", "uniform", "triangular",
-                                          "trapezoidal", "log-logistic",
-                                               "log-normal"),
-                              parms = NULL),
-                          corr.p = NULL,
-                          discard = TRUE,
-                          alpha = 0.05){
+#' @rdname probsens.conf_legacy
+probsens.conf_legacy <- function(case,
+                                 exposed,
+                                 reps = 1000,
+                                 prev.exp = list(dist = c("constant", "uniform",
+                                                          "triangular", "trapezoidal",
+                                                          "logit-logistic", "logit-normal", "beta"),
+                                                 parms = NULL),
+                                 prev.nexp = list(dist = c("constant", "uniform",
+                                                           "triangular", "trapezoidal",
+                                                           "logit-logistic", "logit-normal", "beta"),
+                                                  parms = NULL),
+                                 risk = list(dist = c("constant", "uniform", "triangular",
+                                                      "trapezoidal", "log-logistic",
+                                                      "log-normal"),
+                                             parms = NULL),
+                                 corr.p = NULL,
+                                 discard = TRUE,
+                                 alpha = 0.05){
     if(reps < 1)
         stop(paste("Invalid argument: reps =", reps))
 

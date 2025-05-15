@@ -1,52 +1,46 @@
 ---
 title: "Quantitative Bias Analysis for Epidemiologic Data"
 author: "Denis Haine"
-date: "`r Sys.Date()`"
-output:
-  rmarkdown::html_vignette:
-    fig_caption: yes
+output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Quantitative Bias Analysis for Epidemiologic Data}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-Quantitative bias analysis allows to estimate nonrandom errors in epidemiologic
+Quantitative bias analysis allows to estimate non-random errors in epidemiologic
 studies, assessing the magnitude and direction of biases, and quantifying their
 uncertainties.
-Every study has some random error due to its limited sample size, and is
+Every study has some random error due to its limited sample size and is
 susceptible to systematic errors as well, from selection bias to the presence of
 (un)known confounders or information bias (measurement error, including
 misclassification).
-Bias analysis methods were compiled by Lash et al. in their
+Bias analysis methods were compiled by Fox et al. in their
 book
-["Applying Quantitative Bias Analysis to Epidemiologic Data"](https://link.springer.com/book/10.1007/978-3-030-82673-4).
+["Applying Quantitative Bias Analysis to Epidemiologic Data, 2^nd^ ed."](https://link.springer.com/book/10.1007/978-3-030-82673-4).
 This package implements the various bias analyses from that book, which are also
 [available](https://sites.google.com/site/biasanalysis/) (for some) as a
-spreadsheet or a SAS macro, as well as some additional approaches.
-This vignette provides some examples on how to use the package.
+spreadsheet or a SAS macro. The package also provides additional approaches.
+This vignette provides some examples of using the package.
 
 Functions available in `episensr` are:
 
-* `selection`: Selection bias
-* `mbias`: Selection bias caused by M bias
-* `confounders`: Unmeasured or unknown confounders
-* `confounders.poly`: Polytomous confounders
-* `confounders.emm`: Unmeasured or unknown confounders in the presence of effect modification
-* `confounders.limit`: Bounding the bias limits of unmeasured confounding
-* `confounders.array`: Bias due to unmeasured confounders based on confounding imbalance among exposed and unexposed
-* `confounders.ext`: Unmeasured confounders based on external measurement
-* `confounders.evalue`: E-value due to unmeasured confounder
-* `misclassification`: Disease or exposure misclassification
-* `misclassification_cov`: Covariate misclassification
-* `bootstrap`: Bootstrap resampling for selection and misclassification bias
-* `multidimBias`: Multidimensional bias analysis
-* `probsens.sel`: Probabilistic analysis for selection bias
-* `probsens.conf`: Probabilistic analysis for unmeasured confounding
-* `probsens`: Probabilistic analysis for misclassification
-* `probsens.irr.conf`: Probabilistic analysis for unmeasured confounding of person-time data
-* `probsens.irr`: Probabilistic analysis for exposure misclassification of person-time data
-* `multiple bias`: Multiple bias modeling
+* `selection()` and `probsens.sel()`: Selection bias and Probabilistic analysis for selection bias
+* `mbias()`: Selection bias caused by M bias
+* `confounders()` and `probsens_conf()`: Unmeasured or unknown confounders and Probabilistic analysis for unmeasured confounding
+* `confounders.poly()`: Polytomous confounders
+* `confounders.emm()`: Unmeasured or unknown confounders in the presence of effect modification
+* `confounders.limit()`: Bounding the bias limits of unmeasured confounding
+* `confounders.array()`: Bias due to unmeasured confounders based on confounding imbalance among exposed and unexposed
+* `confounders.ext()`: Unmeasured confounders based on external measurement
+* `confounders.evalue()`: E-value due to unmeasured confounder
+* `probsens.irr.conf()`: Probabilistic analysis for unmeasured confounding of person-time data
+* `misclass()` and `probsens()`: Disease or exposure misclassification and Probabilistic analysis for misclassification
+* `misclass_cov()`: Covariate misclassification
+* `probsens.irr()`: Probabilistic analysis for exposure misclassification of person-time data
+* `bootstrap()`: Bootstrap resampling for selection and misclassification bias
+* `multidimBias()`: Multidimensional bias analysis
+* `multiple.bias()`: Multiple bias modeling
 
 ## Selection Bias
 
@@ -65,15 +59,15 @@ The 2X2 table for this study is the following:
 | Cases    | 136         | 107    |
 | Controls | 297         | 165    |
 
-We use the function `selection` as shown below.
+We use the function `selection()` as shown below.
 
 ```{r selection}
 library(episensr)
 
 stang <- selection(matrix(c(136, 107, 297, 165),
-                          dimnames = list(c("UM+", "UM-"), c("Mobile+", "Mobile-")),
-                          nrow = 2, byrow = TRUE),
-                   bias_parms = c(.94, .85, .64, .25))
+						  dimnames = list(c("UM+", "UM-"), c("Mobile+", "Mobile-")),
+						  nrow = 2, byrow = TRUE),
+				   bias_parms = c(.94, .85, .64, .25))
 stang
 ```
 
@@ -81,8 +75,7 @@ The various `episensr` functions return an object which is a list containing the
 input and output variables.
 You can check it out with `str()`.
 
-The 2X2 table is provided as a matrix and selection probabilities given with the
-argument `bias_parms`, a vector with the 4 probabilities (guided by the
+The 2X2 table is provided as a matrix, and the selection probabilities are given with the argument `bias_parms()`, a vector with the four probabilities (guided by the
 participation rates in cases and controls) in the following order: among cases
 exposed, among cases unexposed, among noncases exposed, and among noncases
 unexposed.
@@ -91,14 +84,13 @@ risk), followed by the corrected ones.
 
 ## Misclassification Bias
 
-Misclassification bias can be assessed with the function `misclassification`.
+Misclassification bias can be assessed with the function `misclass()`.
 Confidence intervals for corrected association due to exposure misclassification
 are also directly available, or the estimates can also be bootstrapped (see below).
 The confidence intervals from the variance of the corrected odds ratio estimator in the
-`misclassification` function are computed as in [Greenland et
-al.]( https://doi.org/10.1002/sim.4780070704) and [Chu et
-al.](https://doi.org/10.1016/j.annepidem.2006.04.001), when adjusting for exposure misclassification
-using sensitivity and specificity.
+`misclass()` function are computed as in [Greenland et al.]( https://doi.org/10.1002/sim.4780070704)
+and [Chu et al.](https://doi.org/10.1016/j.annepidem.2006.04.001), when adjusting for
+exposure misclassification using sensitivity and specificity.
 Using the example in Chu et al. of a case-control study of cigarette smoking and
 invasive pneumococcal disease, the unadjusted odds ratio is 4.32, with a 95%
 confidence interval of 2.96 to 6.31.
@@ -106,12 +98,12 @@ Let's say the sensitivity of self-reported smoking is 94% and specificity is
 97%, for both the case and control groups:
 
 ```{r misclass}
-misclassification(matrix(c(126, 92, 71, 224),
-                         dimnames = list(c("Case", "Control"),
-                                         c("Smoking +", "Smoking - ")),
-                         nrow = 2, byrow = TRUE),
-                  type = "exposure",
-                  bias_parms = c(0.94, 0.94, 0.97, 0.97))
+misclass(matrix(c(126, 92, 71, 224),
+				dimnames = list(c("Case", "Control"),
+								c("Smoking +", "Smoking - ")),
+				nrow = 2, byrow = TRUE),
+		 type = "exposure",
+		 bias_parms = c(0.94, 0.94, 0.97, 0.97))
 ```
 
 The corrected odds ratio is now 5.02, with a widened 95% confidence interval
@@ -122,88 +114,80 @@ You can even reproduce the contour plots in Chu et al. paper!
 
 ```{r, warning=FALSE,fig.cap='Contour plot of point estimates of corrected odds ratio (OR)',fig.width=6,fig.height=4}
 dat <- expand.grid(Se = seq(0.582, 1, 0.02),
-                   Sp = seq(0.762, 1, 0.02))
+				   Sp = seq(0.762, 1, 0.02))
 
 dat$OR_c <- apply(dat, 1,
-                  function(x) misclassification(matrix(c(126, 92, 71, 224),
-                                                       nrow = 2, byrow = TRUE),
-                                                type = "exposure",
-                                                bias_parms = c(x[1], x[1], x[2], x[2]))$adj.measures[2, 1])
+				  function(x) misclass(matrix(c(126, 92, 71, 224),
+											  nrow = 2, byrow = TRUE),
+									   type = "exposure",
+									   bias_parms = c(x[1], x[1], x[2], x[2]))$adj_measures[2, 1])
 dat$OR_c <- round(dat$OR_c, 2)
+dat$lab <- cut(dat$OR_c, breaks = c(4.32, 6.96, 8.56, 12.79, 23.41, 432.1, Inf), right = FALSE,
+				 labels = c("", "6.96", "8.56", "12.79", "23.41", "432.1"))
 
 library(ggplot2)
 library(directlabels)
-p1 <- ggplot(dat, aes(x = Se, y = Sp, z = OR_c)) +
-    geom_contour(aes(colour = ..level..), breaks = c(4.32, 6.96, 8.56, 12.79, 23.41, 432.1)) +
-    annotate("text", x = 1, y = 1, label = "4.32", size = 3) +
-    scale_fill_gradient(limits = range(dat$OR_c), high = 'red', low = 'green') +
-    scale_x_continuous(breaks = seq(0.5, 1, .1), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .1), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
-    xlab("Sensitivity") +
-    ylab("Specificity") +
-    ggtitle("Estimates of Corrected OR")
-direct.label(p1, list("far.from.others.borders", "calc.boxes", "enlarge.box",
-                      hjust = 1, vjust = -.5, box.color = NA, cex = .6,
-                      fill = "transparent", "draw.rects"))
+ggplot(dat, aes(x = Se, y = Sp, z = OR_c)) +
+	geom_contour(aes(colour = after_stat(level)), breaks = c(4.32, 6.96, 8.56, 12.79, 23.41, 432.1)) +
+	annotate("text", x = 1, y = 1, label = "4.32", size = 3) +
+	scale_x_continuous(breaks = seq(0.5, 1, .1), expand = c(0, 0)) +
+	scale_y_continuous(breaks = seq(0.5, 1, .1), expand = c(0, 0)) +
+	coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
+	scale_colour_gradient(guide = "none") +
+	xlab("Sensitivity") +
+	ylab("Specificity") +
+	ggtitle("Estimates of Corrected OR") +
+	geom_dl(aes(label = lab), method = list("last.points", hjust = 1, vjust = -.1, cex = .7))
+dat$lab <- NULL
 ```
 
 ```{r, warning=FALSE,fig.cap='Contour plot of 95% lower confidence limit of corrected OR',warning=FALSE,fig.width=6,fig.height=4}
 dat$ORc_lci <- apply(dat, 1,
-                     function(x) misclassification(matrix(c(126, 92, 71, 224),
-                                                          nrow = 2, byrow = TRUE),
-                                                   type = "exposure",
-                                                   bias_parms = c(x[1], x[1], x[2], x[2]))$adj.measures[2, 2])
+					 function(x) misclass(matrix(c(126, 92, 71, 224),
+												 nrow = 2, byrow = TRUE),
+										  type = "exposure",
+										  bias_parms = c(x[1], x[1], x[2], x[2]))$adj_measures[2, 2])
 dat$ORc_lci <- round(dat$ORc_lci, 2)
 
 p3 <- ggplot(dat, aes(x = Se, y = Sp, z = ORc_lci)) +
-    geom_contour(aes(colour = ..level..),
-                 breaks = c(4.05, 4.64, 5.68, 7.00, 9.60)) +
-    annotate("text", x = 1, y = 1, label = "2.96", size = 3) +
-    scale_fill_gradient(limits = range(dat$ORc_lci), high = 'red', low = 'green') +
-    scale_x_continuous(breaks = seq(0.5, 1, .1), expand = c(0,0)) +
-    scale_y_continuous(breaks = seq(0.5, 1, .1), expand = c(0,0)) +
-    coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
-    scale_colour_gradient(guide = 'none') +
-    xlab("Sensitivity") +
-    ylab("Specificity") +
-    ggtitle("95% LCI of Corrected OR")
+	geom_contour(aes(colour = ..level..),
+				 breaks = c(4.05, 4.64, 5.68, 7.00, 9.60)) +
+	annotate("text", x = 1, y = 1, label = "2.96", size = 3) +
+	scale_fill_gradient(limits = range(dat$ORc_lci), high = 'red', low = 'green') +
+	scale_x_continuous(breaks = seq(0.5, 1, .1), expand = c(0,0)) +
+	scale_y_continuous(breaks = seq(0.5, 1, .1), expand = c(0,0)) +
+	coord_fixed(ylim = c(0.5, 1.025), xlim = c(0.5, 1.025)) +
+	scale_colour_gradient(guide = 'none') +
+	xlab("Sensitivity") +
+	ylab("Specificity") +
+	ggtitle("95% LCI of Corrected OR")
 direct.label(p3, list("far.from.others.borders", "calc.boxes", "enlarge.box",
-                           hjust = 1, vjust = -.5, box.color = NA, cex = .6,
-                           fill = "transparent", "draw.rects"))
+						   hjust = 1, vjust = -.5, box.color = NA, cex = .6,
+						   fill = "transparent", "draw.rects"))
 ```
 
-The bias analysis for exposure misclassification can also use positive and negative predictive values.
-[Bodnar et al.](https://doi.org/10.1111/ppe.12120) evaluated the accuracy of maternal prepregnancy BMI
-and gestational weight gain (GWG) data derived from the Pennsylvania state birth certiﬁcates against
-information collected from the medical record. To estimate positive and negative predictive values, a
-validation study was conducted by randomly sampling women conditional on their reported BMI category
-and term/preterm status. BMI was obtained from medical records for these sampled women and used as a
-gold standard for BMI category, allowing to determine positive and negative predictive values:
-PPV<sub>D1</sub> = 65%, PPV<sub>D0</sub> = 74%, NPV<sub>D1</sub> = 100%, NPV<sub>D0</sub> = 98%. The
-analysis is the following.
+The bias analysis for exposure misclassification can also use positive and negative predictive values. [Bodnar et al.](https://pubmed.ncbi.nlm.nih.gov/24673550/) evaluated the accuracy of maternal prepregnancy BMI and gestational weight gain (GWG) data derived from the Pennsylvania state birth certiﬁcates against information collected from the medical record. To estimate positive and negative predictive values, a validation study was conducted by randomly sampling women conditional on their reported BMI category and term/preterm status. BMI was obtained from medical records for these sampled women and used as a gold standard for BMI category, allowing to determine positive and negative predictive values:
+PPV<sub>D1</sub> = 65%, PPV<sub>D0</sub> = 74%, NPV<sub>D1</sub> = 100%, NPV<sub>D0</sub> = 98%. The analysis is the following.
 
 ```{r, misclass_pv}
-misclassification(matrix(c(599, 4978, 31175, 391851),
-                         dimnames = list(c("Preterm", "Term"), c("Underweight", "Normal weight")),
-                         nrow = 2, byrow = TRUE),
-                  type = "exposure_pv",
-                  bias_parms = c(0.65, 0.74, 1, 0.98))
+misclass(matrix(c(599, 4978, 31175, 391851),
+				dimnames = list(c("Preterm", "Term"), c("Underweight", "Normal weight")),
+				nrow = 2, byrow = TRUE),
+		 type = "exposure_pv",
+		 bias_parms = c(0.65, 0.74, 1, 0.98))
 ```
 
-Note that using predictive values relates to the prevalence of the true exposure status, which might
-not be the same in every populations.
+Note that using predictive values relates to the prevalence of the true exposure status, which might not be the same in every population.
 
-Covariate misclassification is available via the function `misclassification.cov`.
+Covariate misclassification is available via the function `misclassification.cov()`.
 For example, the paper by [Berry et
 al.](https://www.bmj.com/content/330/7495/815/) looked if misclassification of
 the confounding variable _in vitro fertilization_ (IVF), a confounder, resulted
-wrongly on an association between increase folic acid and having twins.
+wrongly in an association between increased folic acid and having twins.
 IVF increases the risk of twins, and women undergoing IVF might be more likely
-to take folic acid supplements, i.e. IVF would be a confounder between vitamins
+to take folic acid supplements, i.e., IVF would be a confounder between vitamins
 and twins.
-Data on IVF were not available and a proxy for it was used, _period of
+Data on IVF were not available, and a proxy for IVF was used, _period of
 involuntary childlessness_.
 However, it was a poor proxy for IVF, with a sensitivity of 60% and a
 specificity of 95%.
@@ -211,18 +195,18 @@ These bias parameters were assumed to be nondifferential.
 Here's the code with `episensr`:
 
 ```{r cov_misclass}
-misclassification.cov(array(c(1319, 38054, 5641, 405546, 565, 3583,
-                              781, 21958, 754, 34471, 4860, 383588),
-                            dimnames = list(c("Twins+", "Twins-"),
-                                            c("Folic acid+", "Folic acid-"),
-                                            c("Total", "IVF+", "IVF-")),
-                            dim = c(2, 2, 3)),
-                      bias_parms = c(.6, .6, .95, .95))
+misclass_cov(array(c(1319, 38054, 5641, 405546, 565, 3583,
+					 781, 21958, 754, 34471, 4860, 383588),
+				   dimnames = list(c("Twins+", "Twins-"),
+								   c("Folic acid+", "Folic acid-"),
+								   c("Total", "IVF+", "IVF-")),
+				   dim = c(2, 2, 3)),
+			 bias_parms = c(.6, .6, .95, .95))
 ```
 
 While the non-adjusted analysis showed that women taking folic acid were 2.44
 times more likely to have twins, after correcting for the misclassification of
-IVF, risk ratio is now null (= 1.0).
+IVF the risk ratio is now null (= 1.0).
 
 ## Uncontrolled Confounders
 
@@ -231,17 +215,17 @@ We will use data from a cross-sectional study by
 between male circumcision and the risk of acquiring HIV, which might be
 confounded by religion.
 The code to account for unmeasured or unknown confounders is the following,
-where the 2X2 table is given as a matrix.
+where the 2X2 table is provided as a matrix.
 We choose a risk ratio implementation, provide a vector defining the risk ratio
 associating the confounder with the disease, and the prevalence of the
 confounder, religion, among the exposed and the unexposed.
 
 ```{r confounders}
 tyndall <- confounders(matrix(c(105, 85, 527, 93),
-                              dimnames = list(c("HIV+", "HIV-"), c("Circ+", "Circ-")),
-                              nrow = 2, byrow = TRUE),
-                       type = "RR",
-                       bias_parms = c(.63, .8, .05))
+							  dimnames = list(c("HIV+", "HIV-"), c("Circ+", "Circ-")),
+							  nrow = 2, byrow = TRUE),
+					   type = "RR",
+					   bias_parms = c(.63, .8, .05))
 tyndall
 ```
 
@@ -250,15 +234,15 @@ association between exposure and outcome, and the relationship adjusted for the
 unknown confounder, using a standardized morbidity ratio (SMR) or a
 Mantel-Haenszel (MH) estimate of the risk ratio.
 
-Additional information are also available, like the 2X2 tables by levels of the
+Additional information is also available, like the 2X2 tables by levels of the
 confounder.
 
 ```{r confounders_add}
 ## Confounder +
-tyndall$cfder.data
+tyndall$cfder_data
 
 ## Confounder -
-tyndall$nocfder.data
+tyndall$nocfder_data
 ```
 
 As described in this function's help file, the bias correction used is the
@@ -272,9 +256,9 @@ recipients of ampicillin, with sex treated as a potential confounding factor.
 
 ```{r miettinen1}
 rash <- matrix(c(15, 94, 52, 1163),
-               dimnames = list(c("Rash +", "Rash -"),
-                               c("Allopurinol +", "Allopurinol -")),
-               nrow = 2, byrow = TRUE)
+			   dimnames = list(c("Rash +", "Rash -"),
+							   c("Allopurinol +", "Allopurinol -")),
+			   nrow = 2, byrow = TRUE)
 ```
 
 ```{r miettinen1-tab, echo=FALSE}
@@ -286,19 +270,19 @@ We can decompose these numbers by confounders:
 ```{r miettinen1-conf}
 ## Outcome by confounders
 rash_conf <- matrix(c(36, 58, 645, 518),
-                    dimnames = list(c("Rash +", "Rash -"),
-                                    c("Males", "Females")),
-                    nrow = 2, byrow = TRUE)
+					dimnames = list(c("Rash +", "Rash -"),
+									c("Males", "Females")),
+					nrow = 2, byrow = TRUE)
 ## By confounders: among males
 rash_males <- matrix(c(5, 36, 33, 645),
-                     dimnames = list(c("Rash +", "Rash -"),
-                                     c("Allopurinol +", "Allopurinol -")),
-                     nrow = 2, byrow = TRUE)
+					 dimnames = list(c("Rash +", "Rash -"),
+									 c("Allopurinol +", "Allopurinol -")),
+					 nrow = 2, byrow = TRUE)
 ## By confounders: among females
 rash_females <- matrix(c(10, 58, 19, 518),
-                       dimnames = list(c("Rash +", "Rash -"),
-                                       c("Allopurinol +", "Allopurinol -")),
-                       nrow = 2, byrow = TRUE)
+					   dimnames = list(c("Rash +", "Rash -"),
+									   c("Allopurinol +", "Allopurinol -")),
+					   nrow = 2, byrow = TRUE)
 ```
 
 ```{r miettinen1-conftab, echo=FALSE}
@@ -310,9 +294,12 @@ knitr::kable(rash_females, caption = "Among females")
 And then get the bias parameters:
 
 ```{r miettinen1_parms}
-(RR_no <- (36/(36+645))/(58/(58+518))) # RR between confounder and outcome among non-exposed
-(p1 <- (5+33)/(15+52)) # prevalence of confounder among exposed
-(p2 <- (36+645)/(94+1163)) # prevalence of confounder among unexposed
+# RR between confounder and outcome among non-exposed
+(RR_no <- (36/(36+645))/(58/(58+518)))
+# prevalence of confounder among exposed
+(p1 <- (5+33)/(15+52))
+# prevalence of confounder among unexposed
+(p2 <- (36+645)/(94+1163))
 ```
 
 With the following results:
@@ -326,9 +313,9 @@ of oral contraceptive use to venous thrombosis with age as a confounding factor.
 
 ```{r miettinen2}
 thromb <- matrix(c(12, 30, 53, 347),
-                 dimnames = list(c("Thrombosis +", "Thrombosis -"),
-                                 c("OC +", "OC -")),
-                 nrow = 2, byrow = TRUE)
+				 dimnames = list(c("Thrombosis +", "Thrombosis -"),
+								 c("OC +", "OC -")),
+				 nrow = 2, byrow = TRUE)
 ```
 
 ```{r miettinen2-tab, echo=FALSE}
@@ -338,19 +325,19 @@ knitr::kable(thromb)
 ```{r miettinen2-conf}
 ## Outcome by confounders
 thromb_conf <- matrix(c(18, 12, 158, 189),
-                      dimnames = list(c("Thrombosis +", "Thrombosis -"),
-                                      c("20-29 years old", "30-39 years old")),
-                      nrow = 2, byrow = TRUE)
+					  dimnames = list(c("Thrombosis +", "Thrombosis -"),
+									  c("20-29 years old", "30-39 years old")),
+					  nrow = 2, byrow = TRUE)
 ## By confounders: among 20-29 years old
 thromb_younger <- matrix(c(10, 18, 39, 158),
-                       dimnames = list(c("Thrombosis +", "Thrombosis -"),
-                                       c("OC +", "OC -")),
-                       nrow = 2, byrow = TRUE)
+					   dimnames = list(c("Thrombosis +", "Thrombosis -"),
+									   c("OC +", "OC -")),
+					   nrow = 2, byrow = TRUE)
 ## By confounders: among 30-39 years old
 thromb_older <- matrix(c(2, 12, 14, 189),
-                     dimnames = list(c("Thrombosis +", "Thrombosis -"),
-                                     c("OC +", "OC -")),
-                     nrow = 2, byrow = TRUE)
+					 dimnames = list(c("Thrombosis +", "Thrombosis -"),
+									 c("OC +", "OC -")),
+					 nrow = 2, byrow = TRUE)
 ```
 
 ```{r miettinen2-conftab, echo=FALSE}
@@ -362,9 +349,12 @@ knitr::kable(thromb_older, caption = "Among 30-39 years old")
 And then the bias parameters:
 
 ```{r miettinen2_parms}
-(OR_no <- (18/12)/(158/189)) # OR between confounder and outcome among non-exposed
-(p1 <- (10+39)/(12+53)) # prevalence of confounder among exposed
-(p2 <- (18+158)/(30+347)) # prevalence of confounder among unexposed
+# OR between confounder and outcome among non-exposed
+(OR_no <- (18/12)/(158/189))
+# prevalence of confounder among exposed
+(p1 <- (10+39)/(12+53))
+# prevalence of confounder among unexposed
+(p2 <- (18+158)/(30+347))
 ```
 
 With the following results:
@@ -379,7 +369,7 @@ Selection and misclassification bias models can be bootstrapped in order to get
 confidence interval on the adjusted association parameter.
 We can use the ICU dataset from Hosmer and
 Lemeshow [Applied Logistic
-Regression](https://ca.wiley.com/WileyCDA/WileyTitle/productCd-0470582472.html)
+Regression](https://onlinelibrary.wiley.com/doi/book/10.1002/9781118548387)
 textbook as an example.
 The replicates that give negative cells in the adjusted 2X2 table are silently
 ignored and the number of effective bootstrap replicates is provided in the
@@ -393,9 +383,9 @@ library(aplore3)  # to get ICU data
 data(icu)
 
 ## First run the model
-misclass_eval <- misclassification(icu$sta, icu$inf,
-                                   type = "exposure",
-                                   bias_parms = c(.75, .85, .9, .95))
+misclass_eval <- misclass(icu$sta, icu$inf,
+						  type = "exposure",
+						  bias_parms = c(.75, .85, .9, .95))
 misclass_eval
 
 ## Then bootstrap it

@@ -1,11 +1,22 @@
-#' Probabilistic sensitivity analysis.
+#' Legacy version of `probsens()`.
 #'
-#' Probabilistic sensitivity analysis to correct for exposure misclassification or
-#' outcome misclassification and random error.
-#' Non-differential misclassification is assumed when only the two bias parameters
-#' \code{seca.parms} and \code{spca.parms} are provided. Adding the 2 parameters
-#' \code{seexp.parms} and \code{spexp.parms} (i.e. providing the 4 bias parameters)
-#' evaluates a differential misclassification.
+#' @description
+#' `r lifecycle::badge("superseded")`
+#'
+#' episensr 2.0.0 introduced breaking changes in probabilistic bias analyses by
+#' (1) using the NORTA transformation to define a correlation between
+#' distributions, and (2) sampling true prevalences and then sampling the
+#' adjusted cell counts rather than just using the expected cell counts from a
+#' simple quantitative bias analysis. This updated version should be preferred
+#' and this legacy version will be deprecated in future versions. However, if
+#' you need to quickly roll back to the previous calculations, this function
+#' provides the previous interface. To make old code work as is, add the
+#' following code to the top of your script:
+#'
+#' ```
+#' library(episensr)
+#' probsens <- probsens_legacy
+#' ```
 #'
 #' @param case Outcome variable. If a variable, this variable is tabulated against.
 #' @param exposed Exposure variable.
@@ -13,10 +24,16 @@
 #' @param reps Number of replications to run.
 #' @param seca.parms List defining:
 #' \enumerate{
-#' \item The sensitivity of exposure classification among those with the outcome (when \code{type = "exposure"}), or
-#' \item The sensitivity of outcome classification among those with the exposure (when \code{type = "outcome"}).
+#' \item The sensitivity of exposure classification among those with the outcome
+#' (when \code{type = "exposure"}), or
+#' \item The sensitivity of outcome classification among those with the exposure
+#' (when \code{type = "outcome"}).
 #' }
-#' The first argument provides the probability distribution function (constant, uniform, triangular, trapezoidal, logit-logistic, logit-normal, or beta) and the second its parameters as a vector. Logit-logistic and logit-normal distributions can be shifted by providing lower and upper bounds. Avoid providing these values if a non-shifted distribution is desired.
+#' The first argument provides the probability distribution function (constant,
+#' uniform, triangular, trapezoidal, logit-logistic, logit-normal, or beta) and
+#' the second its parameters as a vector. Logit-logistic and logit-normal
+#' distributions can be shifted by providing lower and upper bounds. Avoid
+#' providing these values if a non-shifted distribution is desired.
 #' \enumerate{
 #' \item constant: constant value,
 #' \item uniform: min, max,
@@ -28,19 +45,23 @@
 #' }
 #' @param seexp.parms List defining:
 #' \enumerate{
-#' \item The sensitivity of exposure classification among those without the outcome (when \code{type = "exposure"}), or
-#' \item The sensitivity of outcome classification among those without the exposure (when \code{type = "outcome"}).
+#' \item The sensitivity of exposure classification among those without the
+#' outcome (when \code{type = "exposure"}), or
+#' \item The sensitivity of outcome classification among those without the
+#' exposure (when \code{type = "outcome"}).
 #' }
 #' @param spca.parms List as above for \code{seca.parms} but for specificity.
 #' @param spexp.parms List as above for \code{seexp.parms} but for specificity.
 #' @param corr.se Correlation between case and non-case sensitivities.
 #' @param corr.sp Correlation between case and non-case specificities.
-#' @param discard A logical scalar. In case of negative adjusted count, should the draws be discarded? If set to FALSE, negative counts are set to zero.
+#' @param discard A logical scalar. In case of negative adjusted count, should
+#' the draws be discarded? If set to FALSE, negative counts are set to zero.
 #' @param alpha Significance level.
 #'
 #' @return A list with elements:
 #' \item{obs.data}{The analyzed 2 x 2 table from the observed data.}
-#' \item{obs.measures}{A table of observed relative risk and odds ratio with confidence intervals.}
+#' \item{obs.measures}{A table of observed relative risk and odds ratio with
+#' confidence intervals.}
 #' \item{adj.measures}{A table of corrected relative risks and odds ratios.}
 #' \item{sim.df}{Data frame of random parameters and computed values.}
 #' \item{reps}{Number of replications.}
@@ -52,9 +73,10 @@
 #' # Greenland S., Salvan A., Wegman D.H., Hallock M.F., Smith T.J.
 #' # A case-control study of cancer mortality at a transformer-assembly facility.
 #' # Int Arch Occup Environ Health 1994; 66(1):49-54.
+#' \dontrun{
 #' set.seed(123)
 #' # Exposure misclassification, non-differential
-#' probsens(matrix(c(45, 94, 257, 945),
+#' probsens_legacy(matrix(c(45, 94, 257, 945),
 #' dimnames = list(c("BC+", "BC-"), c("Smoke+", "Smoke-")), nrow = 2, byrow = TRUE),
 #' type = "exposure",
 #' reps = 20000,
@@ -62,7 +84,7 @@
 #' spca.parms = list("trapezoidal", c(.75, .85, .95, 1)))
 #'
 #' # Exposure misclassification, differential
-#' probsens(matrix(c(45, 94, 257, 945),
+#' probsens_legacy(matrix(c(45, 94, 257, 945),
 #' dimnames = list(c("BC+", "BC-"), c("Smoke+", "Smoke-")), nrow = 2, byrow = TRUE),
 #' type = "exposure",
 #' reps = 20000,
@@ -73,7 +95,7 @@
 #' corr.se = .8,
 #' corr.sp = .8)
 #'
-#' probsens(matrix(c(45, 94, 257, 945),
+#' probsens_legacy(matrix(c(45, 94, 257, 945),
 #' dimnames = list(c("BC+", "BC-"), c("Smoke+", "Smoke-")), nrow = 2, byrow = TRUE),
 #' type = "exposure",
 #' reps = 20000,
@@ -84,7 +106,7 @@
 #' corr.se = .8,
 #' corr.sp = .8)
 #'
-#' probsens(matrix(c(338, 490, 17984, 32024),
+#' probsens_legacy(matrix(c(338, 490, 17984, 32024),
 #' dimnames = list(c("BC+", "BC-"), c("Smoke+", "Smoke-")), nrow = 2, byrow = TRUE),
 #' type = "exposure",
 #' reps = 1000,
@@ -92,14 +114,14 @@
 #' spca.parms = list("trapezoidal", c(.8, .9, .9, 1)))
 #'
 #' # Disease misclassification
-#' probsens(matrix(c(173, 602, 134, 663),
+#' probsens_legacy(matrix(c(173, 602, 134, 663),
 #' dimnames = list(c("BC+", "BC-"), c("Smoke+", "Smoke-")), nrow = 2, byrow = TRUE),
 #' type = "outcome",
 #' reps = 20000,
 #' seca.parms = list("uniform", c(.8, 1)),
 #' spca.parms = list("uniform", c(.8, 1)))
 #'
-#' probsens(matrix(c(338, 490, 17984, 32024),
+#' probsens_legacy(matrix(c(338, 490, 17984, 32024),
 #' dimnames = list(c("BC+", "BC-"), c("Smoke+", "Smoke-")), nrow = 2, byrow = TRUE),
 #' type = "outcome",
 #' reps = 20000,
@@ -110,7 +132,7 @@
 #' corr.se = .8,
 #' corr.sp = .8)
 #'
-#' probsens(matrix(c(173, 602, 134, 663),
+#' probsens_legacy(matrix(c(173, 602, 134, 663),
 #' dimnames = list(c("BC+", "BC-"), c("Smoke+", "Smoke-")), nrow = 2, byrow = TRUE),
 #' type = "outcome",
 #' reps = 20000,
@@ -120,26 +142,28 @@
 #' spexp.parms = list("beta", c(130, 30)),
 #' corr.se = .8,
 #' corr.sp = .8)
+#' }
 #' @export
 #' @importFrom stats median qnorm quantile runif qbeta rbeta
-probsens <- function(case,
-                     exposed,
-                     type = c("exposure", "outcome"),
-                     reps = 1000,
-                     seca.parms = list(dist = c("constant", "uniform", "triangular",
-                                                "trapezoidal", "logit-logistic",
-                                                "logit-normal", "beta"),
-                                       parms = NULL),
-                     seexp.parms = NULL,
-                     spca.parms = list(dist = c("constant", "uniform", "triangular",
-                                                "trapezoidal", "logit-logistic",
-                                                "logit-normal", "beta"),
-                                       parms = NULL),
-                     spexp.parms = NULL,
-                     corr.se = NULL,
-                     corr.sp = NULL,
-                     discard = TRUE,
-                     alpha = 0.05){
+#' @rdname probsens_legacy
+probsens_legacy <- function(case,
+                            exposed,
+                            type = c("exposure", "outcome"),
+                            reps = 1000,
+                            seca.parms = list(dist = c("constant", "uniform", "triangular",
+                                                       "trapezoidal", "logit-logistic",
+                                                       "logit-normal", "beta"),
+                                              parms = NULL),
+                            seexp.parms = NULL,
+                            spca.parms = list(dist = c("constant", "uniform", "triangular",
+                                                       "trapezoidal", "logit-logistic",
+                                                       "logit-normal", "beta"),
+                                              parms = NULL),
+                            spexp.parms = NULL,
+                            corr.se = NULL,
+                            corr.sp = NULL,
+                            discard = TRUE,
+                            alpha = 0.05){
     if(reps < 1)
         stop(paste("Invalid argument: reps =", reps))
 

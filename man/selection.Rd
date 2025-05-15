@@ -2,9 +2,25 @@
 % Please edit documentation in R/selection.R
 \name{selection}
 \alias{selection}
-\title{Sensitivity analysis to correct for selection bias.}
+\alias{probsens.sel}
+\title{Selection bias.}
 \usage{
 selection(case, exposed, bias_parms = NULL, alpha = 0.05)
+
+probsens.sel(
+  case,
+  exposed,
+  reps = 1000,
+  case_exp = list(dist = c("constant", "uniform", "triangular", "trapezoidal", "normal",
+    "beta"), parms = NULL),
+  case_nexp = list(dist = c("constant", "uniform", "triangular", "trapezoidal", "normal",
+    "beta"), parms = NULL),
+  ncase_exp = list(dist = c("constant", "uniform", "triangular", "trapezoidal", "normal",
+    "beta"), parms = NULL),
+  ncase_nexp = list(dist = c("constant", "uniform", "triangular", "trapezoidal",
+    "normal", "beta"), parms = NULL),
+  alpha = 0.05
+)
 }
 \arguments{
 \item{case}{Outcome variable. If a variable, this variable is tabulated
@@ -22,25 +38,64 @@ provided:
 \item Selection probability among noncases unexposed (4).
 }
 or a single positive selection-bias factor which is the ratio of the exposed
-versus unexposed selection probabilities comparing cases and noncases [(1*4)/(2*3)
-from above].}
+versus unexposed selection probabilities comparing cases and noncases
+((1\emph{4)/(2}3) from above).}
 
 \item{alpha}{Significance level.}
+
+\item{reps}{Number of replications to run.}
+
+\item{case_exp}{If or_parms not provided, defines the selection probability
+among case exposed. The first argument provides the probability distribution
+function and the second its parameters as a vector:
+\enumerate{
+\item constant: constant value,
+\item uniform: min, max,
+\item triangular: lower limit, upper limit, mode,
+\item trapezoidal: min, lower mode, upper mode, max.
+\item normal: truncated normal with lower bound, upper bound, mean, sd,
+\item beta: alpha, beta.
+}}
+
+\item{case_nexp}{Same among cases non-exposed.}
+
+\item{ncase_exp}{Same among non-cases exposed.}
+
+\item{ncase_nexp}{Same among non-cases non-exposed.}
 }
 \value{
 A list with elements:
 \item{model}{Bias analysis performed.}
-\item{obs.data}{The analyzed 2 x 2 table from the observed data.}
-\item{corr.data}{The same table corrected for  selection proportions.}
-\item{obs.measures}{A table of odds ratios and relative risk with confidence intervals.}
-\item{adj.measures}{Selection bias corrected measures of outcome-exposure relationship.}
-\item{bias.parms}{Input bias parameters: selection probabilities.}
-\item{selbias.or}{Selection bias odds ratio based on the bias parameters chosen.}
+\item{obs_data}{The analyzed 2 x 2 table from the observed data.}
+\item{corr_data}{The same table corrected for  selection proportions.}
+\item{obs_measures}{A table of odds ratios and relative risk with confidence intervals.}
+\item{adj_measures}{Selection bias corrected measures of outcome-exposure relationship.}
+\item{bias_parms}{Input bias parameters: selection probabilities.}
+\item{selbias_or}{Selection bias odds ratio based on the bias parameters chosen.}
+
+A list with elements (for \code{probsens.sel()}):
+\item{obs_data}{The analyzed 2 x 2 table from the observed data.}
+\item{obs_measures}{A table of observed odds ratio with confidence intervals.}
+\item{adj_measures}{A table of corrected odds ratios.}
+\item{sim_df}{Data frame of random parameters and computed values.}
+\item{reps}{Number of replications.}
 }
 \description{
-Simple sensitivity analysis to correct for selection bias using estimates of
-the selection proportions.
+\code{selection()} and \code{probsens.sel()} allow to provide adjusted measures of
+association corrected for selection bias.
 }
+\section{Simple bias analysis with \code{selection()}}{
+
+\code{selection()} allows you to run a simple sensitivity analysis to correct for
+selection bias using estimates of the selection proportions.
+}
+
+\section{Probabilistic sensitivity analysis with \code{probsens.sel()}}{
+
+\code{probsens.sel()} performs a summary-level probabilistic sensitivity analysis to
+correct for selection bias.
+}
+
 \examples{
 # The data for this example come from:
 # Stang A., Schmidt-Pokrzywniak A., Lehnert M., Parkin D.M., Ferlay J., Bornfeld N.
@@ -58,4 +113,27 @@ selection(matrix(c(136, 107, 297, 165),
 dimnames = list(c("UM+", "UM-"), c("Mobile+", "Mobile-")),
 nrow = 2, byrow = TRUE),
 bias_parms = 0.43)
+#
+# The data for this example come from:
+# Stang A., Schmidt-Pokrzywniak A., Lehnert M., Parkin D.M., Ferlay J., Bornfeld N. et al.
+# Population-based incidence estimates of uveal melanoma in Germany.
+# Supplementing cancer registry data by case-control data.
+# Eur J Cancer Prev 2006;15:165-70.
+set.seed(1234)
+probsens.sel(matrix(c(139, 114, 369, 377),
+dimnames = list(c("Melanoma+", "Melanoma-"), c("Mobile+", "Mobile-")), nrow = 2, byrow = TRUE),
+reps = 5000,
+case_exp = list("beta", c(139, 5.1)),
+case_nexp = list("beta", c(114, 11.9)),
+ncase_exp = list("beta", c(369, 96.1)),
+ncase_nexp = list("beta", c(377, 282.9)))
 }
+\references{
+Fox, M.P, MacLehose, R.F., Lash, T.L., 2021 \emph{Applying Quantitative
+Bias Analysis to Epidemiologic Data}, pp.90--91, 274--279, Springer.
+}
+\seealso{
+Other selection: 
+\code{\link{mbias}()}
+}
+\concept{selection}

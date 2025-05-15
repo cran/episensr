@@ -9,7 +9,7 @@
 \arguments{
 \item{x}{An object of class 'episensr.booted'.}
 
-\item{digits}{Minimal number of _significant_ digits, see 'print.default'.}
+\item{digits}{Minimal number of \emph{significant} digits, see 'print.default'.}
 
 \item{...}{Other unused arguments.}
 }

@@ -6,85 +6,93 @@
 \usage{
 \method{plot}{episensr.probsens}(
   x,
-  parms = c("rr", "or", "rr_tot", "or_tot", "irr", "irr_tot", "seca", "seexp", "spca",
-    "spexp", "or_sel", "prev.exp", "prev.nexp", "risk"),
+  parms = c("rr", "or", "rr_tot", "or_tot", "forest_rr", "forest_or", "irr", "irr_tot",
+    "seca", "seexp", "spca", "spexp", "prev_exp", "prev_nexp", "risk"),
   ...
 )
 }
 \arguments{
 \item{x}{An object of class "episensr.probsens" returned from the
-\code{episensr probsens}, \code{probsens.sel}, \code{probsens.conf}, \code{probsens.irr},
+\code{episensr probsens}, \code{probsens.sel}, \code{probsens_conf}, \code{probsens.irr},
 \code{probsens.irr.conf} functions.}
 
 \item{parms}{Choice between adjusted relative risk (\code{rr}) and odds ratio (\code{or}),
-total error relative risk and odds ratio (\code{rr_tot} and \code{or_tot}), \code{seca},
-\code{seexp}, \code{spca}, \code{or_sel}, and \code{spexp}, \code{prev.exp},
-\code{prev.nexp} and \code{risk}, \code{irr} and \code{irr_tot}.}
+total error relative risk and odds ratio (\code{rr_tot} and \code{or_tot}), forest
+plots (\code{forest_rr} and \code{forest_or}), \code{seca}, \code{seexp},
+\code{spca}, and \code{spexp}, \code{prev.exp}, \code{prev.nexp} and \code{risk},
+\code{irr} and \code{irr_tot}.}
 
 \item{...}{Other unused arguments.}
 }
 \description{
 This takes a \code{probsens}-family object and produces the distribution plot of
 chosen bias parameters, as well as distribution of adjusted measures (with confidence
-interval).
+interval). It can also produce a forest plot of relative risks or odds ratios (with
+\code{probsens()}, \code{probsens_conf()}, or \code{probsens.sel()})
 }
 \examples{
 set.seed(123)
 risk <- probsens(matrix(c(45, 94, 257, 945),
 dimnames = list(c("BC+", "BC-"), c("Smoke+", "Smoke-")), nrow = 2, byrow = TRUE),
 type = "exposure", reps = 20000,
-seca.parms = list("trapezoidal", c(.75, .85, .95, 1)),
-spca.parms = list("trapezoidal", c(.75, .85, .95, 1)))
+seca = list("trapezoidal", c(.75, .85, .95, 1)),
+spca = list("trapezoidal", c(.75, .85, .95, 1)))
 plot(risk, "rr")
 
 set.seed(123)
 odds <- probsens(matrix(c(45, 94, 257, 945),
 dimnames = list(c("BC+", "BC-"), c("Smoke+", "Smoke-")), nrow = 2, byrow = TRUE),
 type = "exposure", reps = 20000,
-seca.parms = list("beta", c(908, 16)),
-seexp.parms = list("beta", c(156, 56)),
-spca.parms = list("beta", c(153, 6)),
-spexp.parms = list("beta", c(205, 18)),
-corr.se = .8,
-corr.sp = .8)
+seca = list("beta", c(908, 16)),
+seexp = list("beta", c(156, 56)),
+spca = list("beta", c(153, 6)),
+spexp = list("beta", c(205, 18)),
+corr_se = .8,
+corr_sp = .8)
 plot(odds, "seca")
 
 set.seed(123)
-select <- probsens.sel(matrix(c(136, 107, 297, 165),
-dimnames = list(c("Melanoma+", "Melanoma-"), c("Mobile+", "Mobile-")),
-nrow = 2, byrow = TRUE), reps = 20000,
-or.parms = list("triangular", c(.35, 1.1, .43)))
-plot(select, "or_sel")
+smoke <- probsens(matrix(c(215, 1449, 668, 4296),
+dimnames = list(c("BC+", "BC-"), c("Smoke+", "Smoke-")), nrow = 2, byrow = TRUE),
+type = "exposure", reps = 20000,
+seca = list("uniform", c(.7, .95)),
+spca = list("uniform", c(.9, .99)))
+plot(smoke, "forest_or")
 
 set.seed(123)
-conf <- probsens.conf(matrix(c(105, 85, 527, 93),
+conf <- probsens_conf(matrix(c(105, 85, 527, 93),
 dimnames = list(c("HIV+", "HIV-"), c("Circ+", "Circ-")), nrow = 2, byrow = TRUE),
 reps = 20000,
-prev.exp = list("triangular", c(.7, .9, .8)),
-prev.nexp = list("trapezoidal", c(.03, .04, .05, .06)),
+prev_exp = list("triangular", c(.7, .9, .8)),
+prev_nexp = list("trapezoidal", c(.03, .04, .05, .06)),
 risk = list("triangular", c(.6, .7, .63)),
-corr.p = .8)
-plot(conf, "prev.exp")
+corr_p = .8)
+plot(conf, "prev_exp")
 
 set.seed(123)
 inc1 <- probsens.irr(matrix(c(2, 67232, 58, 10539000),
 dimnames = list(c("GBS+", "Person-time"), c("HPV+", "HPV-")), ncol = 2),
 reps = 20000,
-seca.parms = list("trapezoidal", c(.4, .45, .55, .6)),
-spca.parms = list("constant", 1))
+seca = list("trapezoidal", c(.4, .45, .55, .6)),
+spca = list("constant", 1))
 plot(inc1, "irr")
 
 set.seed(123)
 inc2 <- probsens.irr.conf(matrix(c(77, 10000, 87, 10000),
 dimnames = list(c("D+", "Person-time"), c("E+", "E-")), ncol = 2),
 reps = 20000,
-prev.exp = list("trapezoidal", c(.01, .2, .3, .51)),
-prev.nexp = list("trapezoidal", c(.09, .27, .35, .59)),
+prev_exp = list("trapezoidal", c(.01, .2, .3, .51)),
+prev_nexp = list("trapezoidal", c(.09, .27, .35, .59)),
 risk = list("trapezoidal", c(2, 2.5, 3.5, 4.5)),
-corr.p = .8)
+corr_p = .8)
 plot(inc2, "risk")
 }
 \seealso{
-\code{\link{probsens}, \link{probsens.sel}, \link{probsens.conf},
+\code{\link{probsens}, \link{probsens.sel}, \link{probsens_conf},
 \link{probsens.irr}, \link{probsens.irr.conf}}
+
+Other visualization: 
+\code{\link{plot.episensr.booted}()},
+\code{\link{plot.mbias}()}
 }
+\concept{visualization}
